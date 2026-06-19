@@ -22,6 +22,15 @@ The project implements a 4-bit dynamic password lock on a Digilent Basys 3 FPGA.
 - FPGA part: `xc7a35tcpg236-1`
 - Verified tool: Vivado 2025.2
 
+## Button and Switch Controls
+
+| Control | Function |
+|---|---|
+| `btnC` | Hardware reset. It restarts the system, restores the default password `1010`, clears the unlocked state, and resets remaining attempts to 3. |
+| `btnU` | Confirm button. Press and release it to submit the current `sw[3:0]` password input. |
+| `btnD` | Change-password button. It is active only after a successful unlock while `PASS` is displayed. |
+| `sw[3:0]` | 4-bit password input or new-password value. |
+
 ## Folder Structure
 
 ```text
@@ -54,6 +63,7 @@ The project implements a 4-bit dynamic password lock on a Digilent Basys 3 FPGA.
 
 | Address | Direction | Bits | Description |
 |---|---|---|---|
+| Hardware reset | Input | `btnC` | Reset the system, restore default password `1010`, clear unlock state, and reset remaining attempts to 3. |
 | `0x80000000` | Read | `[0]` | `btnU` confirm |
 | `0x80000000` | Read | `[4:1]` | `sw[3:0]` password input |
 | `0x80000000` | Read | `[5]` | `btnD` change-password button |
