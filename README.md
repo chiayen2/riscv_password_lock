@@ -71,9 +71,15 @@ The project implements a 4-bit dynamic password lock on a Digilent Basys 3 FPGA.
 | `0x80000004` | Write | `[7:4]` | remaining attempts digit |
 | `0x80000004` | Write | `[11:8]` | display mode, `0` = digit, `1` = `PASS` |
 
-## Build Firmware
+## Load or Modify the RISC-V Program
 
-The generated firmware files are already included. To rebuild them:
+The RISC-V firmware source is:
+
+```text
+firmware/final_project.s
+```
+
+To modify the lock behavior, button handling, LED status, or seven-segment display mode, edit `firmware/final_project.s` and then rebuild the firmware:
 
 ```powershell
 python scripts/assemble_firmware.py
@@ -84,6 +90,8 @@ Outputs:
 - `firmware/final_project.bin`
 - `firmware/final_project.hex`
 - `firmware/final_project.mem`
+
+The Verilog instruction memory loads `firmware/final_project.mem` through `$readmemh`. After modifying the RISC-V program, rebuild the `.mem` file and then regenerate the Vivado bitstream.
 
 ## Create Vivado Project
 
@@ -121,6 +129,27 @@ bitstream/final_project.bit
 
 The `build/` folder is intentionally ignored by Git because it contains generated Vivado logs and temporary outputs.
 
+## Program the FPGA Board
+
+1. Connect the Basys 3 board by micro USB and turn on the board.
+2. Open Vivado.
+3. Open Hardware Manager.
+4. Select Open Target / Auto Connect.
+5. Select Program Device.
+6. Use the generated bitstream:
+
+```text
+build/bitstream/final_project.bit
+```
+
+Or use the included bitstream:
+
+```text
+bitstream/final_project.bit
+```
+
+7. Click Program.
+
 ## Board Operation
 
 1. Press `btnC` to reset. The seven-segment display shows `3`.
@@ -131,6 +160,11 @@ The `build/` folder is intentionally ignored by Git because it contains generate
 6. Three wrong attempts: the system locks, LED shows `1010`, and reset is required.
 7. To change password: while `PASS` is displayed, set `sw[3:0]` to the new password, then press and release `btnD`.
 8. The new password is runtime-only. Pressing `btnC` resets it back to `1010`.
+
+## Known Limitations
+
+- The changed password is stored only while the firmware is running. Pressing `btnC` reset cannot preserve the modified password; the system returns to the default password `1010`.
+- The design uses polling for button inputs instead of interrupts.
 
 ## External Sources
 
