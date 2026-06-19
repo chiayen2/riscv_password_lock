@@ -1,0 +1,27 @@
+# Vivado generated files
+build/
+.Xil/
+*.jou
+*.log
+*.pb
+*.wdb
+*.vcd
+*.dcp
+*.rpt
+*.str
+*.cache/
+*.hw/
+*.sim/
+*.ip_user_files/
+
+# Crash/temp files
+hs_err_pid*
+*.dmp
+*.tmp
+dfx_runtime.txt
+
+# OS/editor files
+Thumbs.db
+.DS_Store
+*.swp
+*~
